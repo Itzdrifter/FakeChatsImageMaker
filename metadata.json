@@ -1,0 +1,5 @@
+{
+  "name": "iMessage Chat Creator",
+  "description": "A tool to create realistic, fake iMessage group chats. Customize participants, messages, and generate high-quality screenshot images of the conversation.",
+  "requestFramePermissions": []
+}
