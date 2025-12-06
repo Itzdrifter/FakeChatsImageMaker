@@ -10,11 +10,17 @@ interface IphoneFrameProps {
     participants: Participant[];
     onRemoveMessage: (id: string) => void;
     moveMessage: (dragIndex: number, hoverIndex: number) => void;
+    onEditMessage: (id: string, text: string, senderId: string) => void;
+    onMoveMessageUp: (id: string) => void;
+    onMoveMessageDown: (id: string) => void;
     chatName: string;
     onChatNameChange: (name: string) => void;
+    currentPageIndex?: number;
+    totalPages?: number;
+    onPageChange?: (index: number) => void;
 }
 
-const IphoneFrame = forwardRef<HTMLDivElement, IphoneFrameProps>(({ messages, participants, onRemoveMessage, moveMessage, chatName, onChatNameChange }, ref) => {
+const IphoneFrame = forwardRef<HTMLDivElement, IphoneFrameProps>(({ messages, participants, onRemoveMessage, moveMessage, onEditMessage, onMoveMessageUp, onMoveMessageDown, chatName, onChatNameChange, currentPageIndex = 0, totalPages = 1, onPageChange }, ref) => {
     return (
         <div className="w-full max-w-sm mx-auto">
             <div className="relative mx-auto border-gray-800 bg-gray-800 border-[14px] rounded-[2.5rem] h-[780px] w-full shadow-2xl">
@@ -42,10 +48,43 @@ const IphoneFrame = forwardRef<HTMLDivElement, IphoneFrameProps>(({ messages, pa
                         </div>
                     </div>
                     <Header participants={participants} chatName={chatName} onChatNameChange={onChatNameChange} />
-                    <ChatArea messages={messages} participants={participants} onRemoveMessage={onRemoveMessage} moveMessage={moveMessage}/>
+                    <ChatArea messages={messages} participants={participants} onRemoveMessage={onRemoveMessage} moveMessage={moveMessage} onEditMessage={onEditMessage} onMoveMessageUp={onMoveMessageUp} onMoveMessageDown={onMoveMessageDown} />
                     <InputBar />
                 </div>
             </div>
+            {totalPages > 1 && (
+                <div className="mt-4 flex items-center justify-center gap-2 flex-wrap">
+                    <button
+                        onClick={() => onPageChange?.(Math.max(0, currentPageIndex - 1))}
+                        disabled={currentPageIndex === 0}
+                        className="px-3 py-1.5 rounded-md text-sm font-medium bg-slate-300 text-slate-700 hover:bg-slate-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        ← Prev
+                    </button>
+                    <div className="flex gap-1">
+                        {Array.from({ length: totalPages }).map((_, i) => (
+                            <button
+                                key={i}
+                                onClick={() => onPageChange?.(i)}
+                                className={`w-8 h-8 rounded-md text-xs font-bold transition-colors ${
+                                    currentPageIndex === i
+                                        ? 'bg-blue-600 text-white'
+                                        : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                                }`}
+                            >
+                                {i + 1}
+                            </button>
+                        ))}
+                    </div>
+                    <button
+                        onClick={() => onPageChange?.(Math.min(totalPages - 1, currentPageIndex + 1))}
+                        disabled={currentPageIndex === totalPages - 1}
+                        className="px-3 py-1.5 rounded-md text-sm font-medium bg-slate-300 text-slate-700 hover:bg-slate-400 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    >
+                        Next →
+                    </button>
+                </div>
+            )}
         </div>
     );
 });

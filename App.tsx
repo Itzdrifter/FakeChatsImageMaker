@@ -74,6 +74,46 @@ const App: React.FC = () => {
       setPages(newPages);
     };
 
+    const editMessage = (id: string, text: string, senderId: string) => {
+      const newPages = pages.map((page, index) => {
+          if (index === currentPageIndex) {
+              return page.map(msg => msg.id === id ? { ...msg, text, senderId } : msg);
+          }
+          return page;
+      });
+      setPages(newPages);
+    };
+
+    const moveMessageUp = (id: string) => {
+      const newPages = pages.map((page, index) => {
+          if (index === currentPageIndex) {
+              const msgIndex = page.findIndex(msg => msg.id === id);
+              if (msgIndex > 0) {
+                  const newPage = [...page];
+                  [newPage[msgIndex], newPage[msgIndex - 1]] = [newPage[msgIndex - 1], newPage[msgIndex]];
+                  return newPage;
+              }
+          }
+          return page;
+      });
+      setPages(newPages);
+    };
+
+    const moveMessageDown = (id: string) => {
+      const newPages = pages.map((page, index) => {
+          if (index === currentPageIndex) {
+              const msgIndex = page.findIndex(msg => msg.id === id);
+              if (msgIndex < page.length - 1) {
+                  const newPage = [...page];
+                  [newPage[msgIndex], newPage[msgIndex + 1]] = [newPage[msgIndex + 1], newPage[msgIndex]];
+                  return newPage;
+              }
+          }
+          return page;
+      });
+      setPages(newPages);
+    };
+
     const moveMessage = useCallback((dragIndex: number, hoverIndex: number) => {
         setPages(prevPages => {
             const newPages = [...prevPages];
@@ -84,6 +124,48 @@ const App: React.FC = () => {
             return newPages;
         });
     }, [currentPageIndex]);
+
+    const importFromJSON = (jsonData: any) => {
+        try {
+            const { chatName: importedChatName, participants: importedParticipants, pages: importedPages } = jsonData;
+            
+            // Process participants
+            if (Array.isArray(importedParticipants)) {
+                const newParticipants = importedParticipants.map((p: any) => ({
+                    id: p.id || `person${Date.now()}-${Math.random()}`,
+                    name: p.name || 'New User',
+                    avatarUrl: p.avatarUrl || `https://picsum.photos/seed/${p.name || 'user'}/100`,
+                    isMe: p.isMe === true
+                }));
+                setParticipants(newParticipants);
+            }
+
+            // Process chat name
+            if (importedChatName) {
+                setChatName(importedChatName);
+            }
+
+            // Process pages and messages
+            if (Array.isArray(importedPages)) {
+                const newPages = importedPages.map((page: any) => {
+                    if (Array.isArray(page)) {
+                        return page.map((msg: any) => ({
+                            id: msg.id || `msg${Date.now()}-${Math.random()}`,
+                            text: msg.text || '',
+                            senderId: msg.senderId || ''
+                        }));
+                    }
+                    return [];
+                });
+                setPages(newPages);
+            }
+
+            return true;
+        } catch (error) {
+            console.error('Failed to import JSON:', error);
+            return false;
+        }
+    };
 
     const addPage = () => {
         setPages([...pages, []]);
@@ -178,17 +260,24 @@ const App: React.FC = () => {
                             onRemovePage={removePage}
                             onSaveScreenshot={() => handleSaveScreenshot(currentPageIndex)}
                             onSaveAllScreenshots={handleSaveAllScreenshots}
+                            onImportJSON={importFromJSON}
                         />
                     </div>
-                    <div className="flex-1 flex justify-center items-start">
+                    <div className="flex-1 flex flex-col justify-start items-center">
                         <IphoneFrame
                             ref={screenshotRef}
                             messages={pages[currentPageIndex] || []}
                             participants={participants}
                             onRemoveMessage={removeMessage}
                             moveMessage={moveMessage}
+                            onEditMessage={editMessage}
+                            onMoveMessageUp={moveMessageUp}
+                            onMoveMessageDown={moveMessageDown}
                             chatName={chatName}
                             onChatNameChange={setChatName}
+                            currentPageIndex={currentPageIndex}
+                            totalPages={pages.length}
+                            onPageChange={setCurrentPageIndex}
                         />
                     </div>
                 </main>

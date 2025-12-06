@@ -1,0 +1,114 @@
+{
+  "chatName": "Steve, Herobrine, Villager",
+  "participants": [
+    {
+      "id": "me",
+      "name": "Me",
+      "avatarUrl": "",
+      "isMe": true
+    },
+    {
+      "id": "person1",
+      "name": "Steve",
+      "avatarUrl": "https://picsum.photos/seed/steve/100",
+      "isMe": false
+    },
+    {
+      "id": "person2",
+      "name": "Herobrine",
+      "avatarUrl": "https://picsum.photos/seed/herobrine/100",
+      "isMe": false
+    },
+    {
+      "id": "person3",
+      "name": "Villager",
+      "isMe": false
+    }
+  ],
+  "pages": [
+    [
+      {
+        "id": "msg1",
+        "text": "Hey guys, ready to build something amazing?",
+        "senderId": "person1"
+      },
+      {
+        "id": "msg2",
+        "text": "I've been watching... always watching",
+        "senderId": "person2"
+      },
+      {
+        "id": "msg3",
+        "text": "Huh!",
+        "senderId": "person3"
+      },
+      {
+        "id": "msg4",
+        "text": "Lol that's creepy bro",
+        "senderId": "me"
+      },
+      {
+        "id": "msg5",
+        "text": "Let's head to the nether",
+        "senderId": "person1"
+      },
+      {
+        "id": "msg6",
+        "text": "The darkness calls...",
+        "senderId": "person2"
+      },
+      {
+        "id": "msg7",
+        "text": "Huh huh!",
+        "senderId": "person3"
+      },
+      {
+        "id": "msg8",
+        "text": "Okay but seriously, watch out for lava",
+        "senderId": "me"
+      }
+    ],
+    [
+      {
+        "id": "msg9",
+        "text": "We made it to the nether!",
+        "senderId": "person1"
+      },
+      {
+        "id": "msg10",
+        "text": "This place... it's perfect",
+        "senderId": "person2"
+      },
+      {
+        "id": "msg11",
+        "text": "Huh?",
+        "senderId": "person3"
+      },
+      {
+        "id": "msg12",
+        "text": "Villager found some gold!",
+        "senderId": "me"
+      },
+      {
+        "id": "msg13",
+        "text": "Nice! Let's gather some resources",
+        "senderId": "person1"
+      },
+      {
+        "id": "msg14",
+        "text": "I see everything in the shadows",
+        "senderId": "person2"
+      },
+      {
+        "id": "msg15",
+        "text": "Huh huh huh!",
+        "senderId": "person3"
+      },
+      {
+        "id": "msg16",
+        "text": "This is getting out of hand 😂",
+        "senderId": "me"
+      }
+    ]
+  ]
+}

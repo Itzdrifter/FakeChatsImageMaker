@@ -8,9 +8,12 @@ interface ChatAreaProps {
     participants: Participant[];
     onRemoveMessage: (id: string) => void;
     moveMessage: (dragIndex: number, hoverIndex: number) => void;
+    onEditMessage: (id: string, text: string, senderId: string) => void;
+    onMoveMessageUp: (id: string) => void;
+    onMoveMessageDown: (id: string) => void;
 }
 
-const ChatArea: React.FC<ChatAreaProps> = ({ messages, participants, onRemoveMessage, moveMessage }) => {
+const ChatArea: React.FC<ChatAreaProps> = ({ messages, participants, onRemoveMessage, moveMessage, onEditMessage, onMoveMessageUp, onMoveMessageDown }) => {
     const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -37,6 +40,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({ messages, participants, onRemoveMes
                             sender={sender}
                             onRemove={onRemoveMessage}
                             moveMessage={moveMessage}
+                            onEditMessage={onEditMessage}
+                            onMoveMessageUp={onMoveMessageUp}
+                            onMoveMessageDown={onMoveMessageDown}
+                            participants={participants}
                         />
                     );
                 })}
