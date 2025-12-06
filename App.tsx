@@ -4,6 +4,7 @@ import { type Participant, type Message } from './types';
 import Controls from './components/Controls';
 import IphoneFrame from './components/IphoneFrame';
 import PrivacyWarning from './components/PrivacyWarning';
+import Tutorial from './components/Tutorial';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 
@@ -30,6 +31,7 @@ const App: React.FC = () => {
     const [pages, setPages] = useState<Message[][]>(defaultMessages);
     const [currentPageIndex, setCurrentPageIndex] = useState(0);
     const [chatName, setChatName] = useState<string>('Alex, Taylor');
+    const [showTutorial, setShowTutorial] = useState<boolean>(true);
 
     const screenshotRef = useRef<HTMLDivElement>(null);
 
@@ -140,6 +142,27 @@ const App: React.FC = () => {
                     <p className="text-slate-600 mt-2">Craft your perfect conversation and save it as a high-quality image.</p>
                 </header>
                 <PrivacyWarning />
+                {showTutorial && (
+                    <div className="relative">
+                        <Tutorial />
+                        <button
+                            onClick={() => setShowTutorial(false)}
+                            className="absolute top-4 right-4 text-slate-500 hover:text-slate-700 text-2xl leading-none"
+                        >
+                            ×
+                        </button>
+                    </div>
+                )}
+                <div className="flex justify-end mb-4">
+                    {!showTutorial && (
+                        <button
+                            onClick={() => setShowTutorial(true)}
+                            className="text-blue-600 hover:text-blue-700 text-sm font-medium"
+                        >
+                            📚 Show Tutorial
+                        </button>
+                    )}
+                </div>
                 <main className="flex flex-col lg:flex-row gap-8">
                     <div className="lg:w-1/3 xl:w-1/4">
                         <Controls
