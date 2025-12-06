@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { type Participant, type Message } from '../types';
 import { PlusIcon } from './icons/PlusIcon';
 import { TrashIcon } from './icons/TrashIcon';
@@ -34,11 +34,17 @@ const Controls: React.FC<ControlsProps> = ({
     onSaveAllScreenshots
 }) => {
     const [openSection, setOpenSection] = useState('participants');
-
     const [newParticipantName, setNewParticipantName] = useState('');
     const [newParticipantAvatar, setNewParticipantAvatar] = useState('');
     const [newMessageText, setNewMessageText] = useState('');
     const [selectedSender, setSelectedSender] = useState(participants[0]?.id || '');
+
+    // Update selectedSender when participants change
+    useEffect(() => {
+        if (!selectedSender || !participants.find(p => p.id === selectedSender)) {
+            setSelectedSender(participants[0]?.id || '');
+        }
+    }, [participants, selectedSender]);
 
     const handleAddParticipant = (e: React.FormEvent) => {
         e.preventDefault();
@@ -107,12 +113,12 @@ const Controls: React.FC<ControlsProps> = ({
 
             <AccordionSection title="Add Message" id="message">
                 <form onSubmit={handleAddMessage} className="space-y-3">
-                     <select value={selectedSender} onChange={e => setSelectedSender(e.target.value)} className="w-full p-2 border border-slate-300 rounded-md bg-white focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition">
+                    <select value={selectedSender} onChange={e => setSelectedSender(e.target.value)} className="w-full p-2 border border-slate-300 rounded-md bg-white focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition">
                         {participants.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
                     </select>
-                    <textarea value={newMessageText} onChange={e => setNewMessageText(e.target.value)} placeholder="Type a message..." rows={3} className="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition"></textarea>
+                    <textarea value={newMessageText} onChange={e => setNewMessageText(e.target.value)} placeholder="Type a message..." rows={3} className="w-full p-2 border border-slate-300 rounded-md focus:ring-2 focus:ring-blue-300 focus:border-blue-500 transition resize-none"></textarea>
                     <button type="submit" className="w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center gap-2 disabled:bg-green-300" disabled={!newMessageText.trim()}>
-                       <PlusIcon className="w-4 h-4" /> Add Message
+                        <PlusIcon className="w-4 h-4" /> Add Message
                     </button>
                 </form>
             </AccordionSection>
